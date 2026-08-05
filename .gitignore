@@ -19,5 +19,8 @@ Thumbs.db
 .classpath
 .settings/
 
-# Output executables
+# Output executables & log files
 output/FollowUpCalendar.exe
+output/FollowUpCalendar_Green_Package/
+output/*.log
+*.log

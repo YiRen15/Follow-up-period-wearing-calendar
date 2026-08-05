@@ -1,0 +1,17 @@
+#!/bin/bash
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+JAR_PATH="$DIR/../Resources/Follow-up-period-wearing-calendar-1.0.0-jar-with-dependencies.jar"
+
+JAVA_CMD="java"
+if [ -n "$JAVA_HOME" ] && [ -x "$JAVA_HOME/bin/java" ]; then
+    JAVA_CMD="$JAVA_HOME/bin/java"
+elif [ -x "/usr/bin/java" ]; then
+    JAVA_CMD="/usr/bin/java"
+fi
+
+if [ -f "$JAR_PATH" ]; then
+    "$JAVA_CMD" -jar "$JAR_PATH"
+else
+    PROJECT_JAR="$DIR/../../../../target/Follow-up-period-wearing-calendar-1.0.0-jar-with-dependencies.jar"
+    "$JAVA_CMD" -jar "$PROJECT_JAR"
+fi

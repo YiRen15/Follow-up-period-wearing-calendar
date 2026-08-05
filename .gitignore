@@ -1,0 +1,23 @@
+# Maven Target
+target/
+
+# Built JRE binaries
+jre/
+
+# Compressed zip artifacts
+*.zip
+
+# System temporary files
+.DS_Store
+Thumbs.db
+
+# IDE configuration files
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+.settings/
+
+# Output executables
+output/FollowUpCalendar.exe

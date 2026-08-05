@@ -6,6 +6,7 @@ import javax.swing.*;
 
 /**
  * 程序启动主入口类
+ * @version 1.0
  */
 public class Main {
     public static void main(String[] args) {

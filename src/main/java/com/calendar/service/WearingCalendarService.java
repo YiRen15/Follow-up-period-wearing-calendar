@@ -13,6 +13,7 @@ import java.util.List;
 /**
  * 随访周期佩戴日历 Excel 导入导出与核心服务 API
  * 供 GUI 客户端及服务器后端系统直接调用
+ * @version 1.0
  */
 public class WearingCalendarService {
 

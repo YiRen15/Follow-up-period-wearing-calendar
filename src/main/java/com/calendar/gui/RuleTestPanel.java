@@ -18,7 +18,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * 规则测试模块面板
+ * 随访周期规则测试面板
+ * @version 1.0
  */
 public class RuleTestPanel extends JPanel {
 

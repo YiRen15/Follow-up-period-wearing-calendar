@@ -17,7 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 规则添加模块面板
+ * 随访周期规则添加面板
+ * @version 1.0
  */
 public class RuleAddPanel extends JPanel {
 

@@ -211,28 +211,8 @@ public class WearingCalendarService {
             }
         }
 
-        // 读取 A2 / B2 / C2 检测规则
-        int excelWearType = 0;
-        Row row1 = sheet.getRow(1);
-        if (row1 != null) {
-            Cell cellC2 = row1.getCell(2);
-            String valC2 = cellC2 != null ? getCellValueAsString(cellC2).trim() : "";
-            if ("1".equals(valC2)) {
-                excelWearType = 1;
-            } else if ("0".equals(valC2)) {
-                excelWearType = 0;
-            } else {
-                Cell cellB2 = row1.getCell(1);
-                if (cellB2 != null) {
-                    String typeStr = getCellValueAsString(cellB2);
-                    if (typeStr.contains("1") || typeStr.contains("自定义")) {
-                        excelWearType = 1;
-                    } else {
-                        excelWearType = 0;
-                    }
-                }
-            }
-        }
+        // 读取 A2 / B2 / C2 检测规则（暂时统一为 1 自定义模式）
+        int excelWearType = 1;
 
         // 从第5行（row index 4）开始循环读取规则明细
         List<DetectionTask> taskList = new ArrayList<DetectionTask>();

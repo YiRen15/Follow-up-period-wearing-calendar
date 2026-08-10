@@ -19,10 +19,10 @@ public class WearingCalendarRule implements Serializable {
     private int WearMode;
 
     /**
-     * 佩戴类型：0:固定模式（每个随访周期规则完全一致），1:自定义模式（存在不一致）
+     * 佩戴类型：0:固定模式，1:自定义模式（目前暂时统一判定为 1 自定义模式）
      * 来源：建立课题时输入，系统也可自动计算
      */
-    private int WearType;
+    private int WearType = 1;
 
     /**
      * 手术日期（提醒医生作用，与实际运算关系不大）
@@ -195,25 +195,10 @@ public class WearingCalendarRule implements Serializable {
 
     /**
      * 自动计算佩戴类型 WearType：
-     * 如果所有规则的 detectionFrequencyUnit、detectionFrequencyNum、detectionFrequencyCount
-     * 完全相同则为 0（固定），否则为 1（自定义）
+     * 遵照业务要求，暂时所有规则统一判定为自定义模式 WearType = 1
      */
     public void recalculateWearType() {
-        if (detectionTaskList == null || detectionTaskList.isEmpty()) {
-            this.WearType = 0;
-            return;
-        }
-        DetectionTask first = detectionTaskList.get(0);
-        for (int i = 1; i < detectionTaskList.size(); i++) {
-            DetectionTask cur = detectionTaskList.get(i);
-            if (cur.getDetectionFrequencyUnit() != first.getDetectionFrequencyUnit() ||
-                cur.getDetectionFrequencyNum() != first.getDetectionFrequencyNum() ||
-                cur.getDetectionFrequencyCount() != first.getDetectionFrequencyCount()) {
-                this.WearType = 1; // 自定义
-                return;
-            }
-        }
-        this.WearType = 0; // 固定
+        this.WearType = 1; // 统一设为 1 (自定义模式)
     }
 
     /**

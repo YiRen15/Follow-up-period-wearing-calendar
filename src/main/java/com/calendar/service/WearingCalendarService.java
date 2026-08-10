@@ -159,7 +159,7 @@ public class WearingCalendarService {
         // 底部检测周期行
         Row totalRow = sheet.createRow(curRowIdx);
         Cell cPeriodLabel = totalRow.createCell(2);
-        cPeriodLabel.setCellValue("检测周期");
+        cPeriodLabel.setCellValue(rule.isUseCustomDetectionPeriod() ? "检测周期(自定义)" : "检测周期");
         cPeriodLabel.setCellStyle(headerStyle);
 
         Cell cPeriodVal = totalRow.createCell(3);
@@ -237,6 +237,10 @@ public class WearingCalendarService {
         // 从第5行（row index 4）开始循环读取规则明细
         List<DetectionTask> taskList = new ArrayList<DetectionTask>();
         int lastRow = sheet.getLastRowNum();
+        boolean isCustomPeriodInExcel = false;
+        int customPeriodNumInExcel = 0;
+        int customPeriodUnitInExcel = 0;
+
         for (int r = 4; r <= lastRow; r++) {
             Row row = sheet.getRow(r);
             if (row == null) continue;
@@ -244,7 +248,21 @@ public class WearingCalendarService {
             Cell cellC = row.getCell(2);
             String unitStr = getCellValueAsString(cellC);
             // 兼容旧格式"总天数"和新格式"检测周期"
-            if ("总天数".equals(unitStr) || "检测周期".equals(unitStr)) {
+            if (unitStr.contains("检测周期") || unitStr.contains("总天数")) {
+                if (unitStr.contains("自定义")) {
+                    isCustomPeriodInExcel = true;
+                    Cell cellD = row.getCell(3);
+                    String periodValStr = getCellValueAsString(cellD); // 如 "2 个月" 或 "2 年"
+                    if (!periodValStr.isEmpty()) {
+                        String[] parts = periodValStr.trim().split("\\s+");
+                        if (parts.length >= 2) {
+                            try {
+                                customPeriodNumInExcel = Integer.parseInt(parts[0].trim());
+                                customPeriodUnitInExcel = DetectionTask.parseUnitByName(parts[1].trim());
+                            } catch (Exception ignored) {}
+                        }
+                    }
+                }
                 break;
             }
 
@@ -288,6 +306,14 @@ public class WearingCalendarService {
         }
 
         ruleResult.setDetectionTaskList(taskList);
+        if (isCustomPeriodInExcel) {
+            ruleResult.setUseCustomDetectionPeriod(true);
+            ruleResult.setDetectionPeriodNum(customPeriodNumInExcel);
+            ruleResult.setDetectionPeriodUnit(customPeriodUnitInExcel);
+        } else {
+            ruleResult.setUseCustomDetectionPeriod(false);
+            ruleResult.recalculateDetectionPeriod();
+        }
 
         // 如果起始日有效，重新触发精准校验推算
         String startDateStr = ruleResult.getStartWearingDate();
@@ -295,10 +321,6 @@ public class WearingCalendarService {
             DateCalculator.calculatePeriods(ruleResult, startDateStr);
         } else {
             ruleResult.setStartWearingDate(null);
-            // 计算检测周期数值与单位
-            int[] periodInfo = DateCalculator.calculateDetectionPeriodFromTasks(taskList);
-            ruleResult.setDetectionPeriodNum(periodInfo[0]);
-            ruleResult.setDetectionPeriodUnit(periodInfo[1]);
             for (DetectionTask task : taskList) {
                 task.setStartDate(null);
                 task.setEndDate(null);

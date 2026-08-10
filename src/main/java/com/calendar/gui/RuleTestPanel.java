@@ -42,10 +42,6 @@ public class RuleTestPanel extends JPanel {
     private JTable dateResultTable;
     private DefaultTableModel tableModel;
 
-    private JCheckBox chkCustomPeriod;
-    private JTextField txtCustomPeriodNum;
-    private JComboBox<String> comboCustomPeriodUnit;
-
     private WearingCalendarRule importedRule;
 
     public RuleTestPanel() {
@@ -70,30 +66,18 @@ public class RuleTestPanel extends JPanel {
         ruleJList.setFont(new Font(MainFrame.getPreferredFontName(), Font.PLAIN, 14));
         JScrollPane scrollPane = new JScrollPane(ruleJList);
 
+        JPanel bottomRightPanel = new JPanel(new BorderLayout(10, 10));
+        bottomRightPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
         lblDetectionPeriod = new JLabel("根据规则计算检测周期为 0 天", SwingConstants.LEFT);
         lblDetectionPeriod.setFont(new Font(MainFrame.getPreferredFontName(), Font.BOLD, 13));
         lblDetectionPeriod.setForeground(new Color(33, 115, 70));
 
-        JPanel customPeriodPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 2));
-        chkCustomPeriod = new JCheckBox("使用自定义检测周期");
-        chkCustomPeriod.setFont(new Font(MainFrame.getPreferredFontName(), Font.PLAIN, 12));
-        txtCustomPeriodNum = new JTextField("1", 3);
-        txtCustomPeriodNum.setEnabled(false);
-        comboCustomPeriodUnit = new JComboBox<String>(new String[]{"天", "周", "个月", "年"});
-        comboCustomPeriodUnit.setSelectedIndex(3);
-        comboCustomPeriodUnit.setEnabled(false);
-
-        customPeriodPanel.add(chkCustomPeriod);
-        customPeriodPanel.add(txtCustomPeriodNum);
-        customPeriodPanel.add(comboCustomPeriodUnit);
-
-        JPanel leftBottomPanel = new JPanel(new GridLayout(2, 1, 2, 2));
-        leftBottomPanel.add(lblDetectionPeriod);
-        leftBottomPanel.add(customPeriodPanel);
+        bottomRightPanel.add(lblDetectionPeriod, BorderLayout.CENTER);
 
         leftPanel.add(topImportPanel, BorderLayout.NORTH);
         leftPanel.add(scrollPane, BorderLayout.CENTER);
-        leftPanel.add(leftBottomPanel, BorderLayout.SOUTH);
+        leftPanel.add(bottomRightPanel, BorderLayout.SOUTH);
 
         // 右侧：起始日期选择与个人佩戴日历推算显示
         JPanel rightPanel = new JPanel(new BorderLayout(10, 10));
@@ -227,36 +211,6 @@ public class RuleTestPanel extends JPanel {
         comboSurgeryMonth.addActionListener(dateChangeListener);
         comboSurgeryDay.addActionListener(dateChangeListener);
 
-        ActionListener customListener = e -> {
-            boolean selected = chkCustomPeriod.isSelected();
-            txtCustomPeriodNum.setEnabled(selected);
-            comboCustomPeriodUnit.setEnabled(selected);
-            if (importedRule != null) {
-                importedRule.setUseCustomDetectionPeriod(selected);
-                if (selected) {
-                    try {
-                        importedRule.setDetectionPeriodNum(Integer.parseInt(txtCustomPeriodNum.getText().trim()));
-                    } catch (Exception ignored) {}
-                    importedRule.setDetectionPeriodUnit(DetectionTask.parseUnitByName((String) comboCustomPeriodUnit.getSelectedItem()));
-                } else {
-                    importedRule.recalculateDetectionPeriod();
-                }
-            }
-            updateRuleDisplay();
-        };
-        chkCustomPeriod.addActionListener(customListener);
-        comboCustomPeriodUnit.addActionListener(customListener);
-        txtCustomPeriodNum.addActionListener(customListener);
-
-        txtCustomPeriodNum.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            @Override
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { customListener.actionPerformed(null); }
-            @Override
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { customListener.actionPerformed(null); }
-            @Override
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { customListener.actionPerformed(null); }
-        });
-
         java.awt.event.ItemListener itemListener = e -> {
             if (e.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
                 if (e.getSource() == comboYear || e.getSource() == comboMonth) {
@@ -312,7 +266,6 @@ public class RuleTestPanel extends JPanel {
             File selectedFile = fileChooser.getSelectedFile();
             try {
                 importedRule = WearingCalendarService.parseExcel(selectedFile);
-                syncUIFromRule();
                 updateRuleDisplay();
                 recalculateAndRefreshTable();
                 JOptionPane.showMessageDialog(this, "Excel 规则读取成功！共解析出 " + importedRule.getTaskCount() + " 个随访周期。", "读取成功", JOptionPane.INFORMATION_MESSAGE);
@@ -335,10 +288,8 @@ public class RuleTestPanel extends JPanel {
             listModel.addElement("佩戴周期 " + (i + 1) + " :   " + task.getDisplayText());
         }
 
-        if (chkCustomPeriod.isSelected()) {
-            String numStr = txtCustomPeriodNum.getText().trim();
-            String customUnitStr = (String) comboCustomPeriodUnit.getSelectedItem();
-            lblDetectionPeriod.setText("根据自定义设置检测周期为 " + numStr + " " + customUnitStr);
+        if (importedRule.isUseCustomDetectionPeriod()) {
+            lblDetectionPeriod.setText("根据自定义设置检测周期为 " + importedRule.getDetectionPeriodDisplay());
         } else {
             int pNum = importedRule.getDetectionPeriodNum();
             int pUnit = importedRule.getDetectionPeriodUnit();
@@ -475,36 +426,12 @@ public class RuleTestPanel extends JPanel {
 
     public void loadRulesDirectly(WearingCalendarRule rule) {
         if (rule == null || rule.getDetectionTaskList() == null || rule.getDetectionTaskList().isEmpty()) return;
-        importedRule = new WearingCalendarRule();
-        importedRule.setUseCustomDetectionPeriod(rule.isUseCustomDetectionPeriod());
-        importedRule.setDetectionPeriodNum(rule.getDetectionPeriodNum());
-        importedRule.setDetectionPeriodUnit(rule.getDetectionPeriodUnit());
-
-        List<DetectionTask> copiedTasks = new java.util.ArrayList<>();
-        for (DetectionTask t : rule.getDetectionTaskList()) {
-            copiedTasks.add(new DetectionTask(
-                    t.getDetectionFrequencyUnit(), t.getDetectionFrequencyNum(), t.getDetectionFrequencyCount()));
-        }
         importedRule = rule;
-        importedRule.setDetectionTaskList(copiedTasks);
         if (!importedRule.isUseCustomDetectionPeriod()) {
             importedRule.recalculateDetectionPeriod();
         }
-        syncUIFromRule();
         updateRuleDisplay();
         recalculateAndRefreshTable();
-    }
-
-    private void syncUIFromRule() {
-        if (importedRule == null) return;
-        boolean custom = importedRule.isUseCustomDetectionPeriod();
-        chkCustomPeriod.setSelected(custom);
-        txtCustomPeriodNum.setEnabled(custom);
-        comboCustomPeriodUnit.setEnabled(custom);
-        if (custom) {
-            txtCustomPeriodNum.setText(String.valueOf(importedRule.getDetectionPeriodNum()));
-            comboCustomPeriodUnit.setSelectedIndex(Math.min(3, Math.max(0, importedRule.getDetectionPeriodUnit())));
-        }
     }
 
     public void loadRulesDirectly(List<DetectionTask> tasks) {

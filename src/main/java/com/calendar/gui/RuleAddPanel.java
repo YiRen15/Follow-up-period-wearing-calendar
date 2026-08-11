@@ -243,11 +243,13 @@ public class RuleAddPanel extends JPanel {
         btnExport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (!validateCustomPeriod()) return;
                 handleExportExcel();
             }
         });
 
         btnDirectTest.addActionListener(e -> {
+            if (!validateCustomPeriod()) return;
             if (onDirectTest != null) {
                 onDirectTest.run();
             }
@@ -323,8 +325,21 @@ public class RuleAddPanel extends JPanel {
             if (chkCustomPeriod.isSelected()) {
                 String numStr = txtCustomPeriodNum.getText().trim();
                 String customUnitStr = (String) comboCustomPeriodUnit.getSelectedItem();
-                lblDetectionPeriod.setText("根据自定义设置检测周期为 " + numStr + " " + customUnitStr);
+                try {
+                    int val = Integer.parseInt(numStr);
+                    if (val <= 0) {
+                        lblDetectionPeriod.setForeground(Color.RED);
+                        lblDetectionPeriod.setText("⚠️ 自定义检测周期必须为大于 0 的正整数！");
+                    } else {
+                        lblDetectionPeriod.setForeground(new Color(33, 115, 70));
+                        lblDetectionPeriod.setText("根据自定义设置检测周期为 " + val + " " + customUnitStr);
+                    }
+                } catch (Exception ex) {
+                    lblDetectionPeriod.setForeground(Color.RED);
+                    lblDetectionPeriod.setText("⚠️ 自定义检测周期请输入有效正整数（不可填小数或符号）");
+                }
             } else {
+                lblDetectionPeriod.setForeground(new Color(33, 115, 70));
                 int totalEstDays = (periodUnit == 0 ? periodNum : periodNum * (periodUnit == 3 ? 365 : (periodUnit == 2 ? 30 : 7)));
                 lblDetectionPeriod.setText("所有周期自动计算检测周期为 " + periodNum + " " + unitName + " (实际累积总天数: " + totalEstDays + " 天)");
             }
@@ -364,6 +379,22 @@ public class RuleAddPanel extends JPanel {
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "导出 Excel 失败：" + ex.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
             }
+        }
+    }
+
+    private boolean validateCustomPeriod() {
+        if (!chkCustomPeriod.isSelected()) return true;
+        String numStr = txtCustomPeriodNum.getText().trim();
+        try {
+            int val = Integer.parseInt(numStr);
+            if (val <= 0) {
+                JOptionPane.showMessageDialog(this, "自定义检测周期数值必须为大于 0 的正整数！", "格式错误", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            return true;
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "【格式错误】自定义检测周期必须为有效正整数（不可填小数或符号）！\n\n提示：如需设置半年或半月，请将单位切换为【个月/周/天】输入整数。", "输入格式错误", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
     }
 }

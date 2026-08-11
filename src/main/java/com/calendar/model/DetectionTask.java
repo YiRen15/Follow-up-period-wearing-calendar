@@ -63,14 +63,14 @@ public class DetectionTask implements Serializable {
     private int detectionFrequencyCount;
 
     /**
-     * 有效检测时长（默认 0）
+     * 有效检测时长（默认 6）
      */
-    private int validDetectionDuration;
+    private int validDetectionDuration = 6;
 
     /**
-     * 有效检测时长单位：0:分钟, 1:小时（默认 0）
+     * 有效检测时长单位：0:分钟, 1:小时（默认 1，代表小时）
      */
-    private int validDetectionDurationUnit;
+    private int validDetectionDurationUnit = 1;
 
     public DetectionTask() {
     }

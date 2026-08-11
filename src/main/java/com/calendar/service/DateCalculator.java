@@ -119,16 +119,13 @@ public class DateCalculator {
             LocalDate nextStart;
 
             switch (unit) {
-                case 2: // 月 (锚定日 V1.1 算法)
-                    LocalDate targetMonthDate = curStart.plusMonths(cnt);
-                    int maxDays = targetMonthDate.lengthOfMonth();
-                    int targetDay = Math.min(anchorDay, maxDays);
-                    nextStart = LocalDate.of(targetMonthDate.getYear(), targetMonthDate.getMonthValue(), targetDay);
-                    curEnd = nextStart.minusDays(1);
+                case 2: // 月（真实自然满月算法，避免被首日锚定截断）
+                    curEnd = curStart.plusMonths(cnt).minusDays(1);
+                    nextStart = curEnd.plusDays(1);
                     break;
                 case 3: // 年
                     curEnd = curStart.plusYears(cnt).minusDays(1);
-                    nextStart = curStart.plusYears(cnt);
+                    nextStart = curEnd.plusDays(1);
                     break;
                 default: // 天(0), 周(1)
                     curEnd = calculateEndDate(curStart, task);

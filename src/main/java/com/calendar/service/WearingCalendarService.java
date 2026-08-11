@@ -159,7 +159,7 @@ public class WearingCalendarService {
         // 底部检测周期行
         Row totalRow = sheet.createRow(curRowIdx);
         Cell cPeriodLabel = totalRow.createCell(2);
-        cPeriodLabel.setCellValue(rule.isUseCustomDetectionPeriod() ? "检测周期(自定义)" : "检测周期");
+        cPeriodLabel.setCellValue("检测周期");
         cPeriodLabel.setCellStyle(headerStyle);
 
         Cell cPeriodVal = totalRow.createCell(3);
@@ -227,8 +227,8 @@ public class WearingCalendarService {
 
             Cell cellC = row.getCell(2);
             String unitStr = getCellValueAsString(cellC);
-            // 兼容旧格式"总天数"和新格式"检测周期"
-            if (unitStr.contains("检测周期") || unitStr.contains("总天数")) {
+            // 兼容所有以"检测周期"或"总天数"开头的总结行，彻底杜绝误读多出一行
+            if (unitStr.startsWith("检测周期") || unitStr.startsWith("总天数")) {
                 if (unitStr.contains("自定义")) {
                     isCustomPeriodInExcel = true;
                     Cell cellD = row.getCell(3);

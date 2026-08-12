@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  * 随访周期规则添加面板
- * @version 1.0
+ * @version 1.0.1
  */
 public class RuleAddPanel extends JPanel {
 

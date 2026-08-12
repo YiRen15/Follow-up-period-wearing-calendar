@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 随访周期整体佩戴规则模型
  * 对应设计文档中的整体设计表
- * @version 1.0
+ * @version 1.0.1
  */
 public class WearingCalendarRule implements Serializable {
     private static final long serialVersionUID = 1L;

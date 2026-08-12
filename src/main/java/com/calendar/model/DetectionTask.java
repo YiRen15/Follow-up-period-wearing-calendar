@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * 检测任务结构体（单个随访周期）
  * 对应设计文档中 detectionTaskList 的每一项
- * @version 1.0
+ * @version 1.0.1
  */
 public class DetectionTask implements Serializable {
     private static final long serialVersionUID = 1L;

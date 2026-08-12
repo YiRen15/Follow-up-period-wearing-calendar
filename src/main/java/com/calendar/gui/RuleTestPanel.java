@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * 随访周期规则测试面板
- * @version 1.0
+ * @version 1.0.1
  */
 public class RuleTestPanel extends JPanel {
 

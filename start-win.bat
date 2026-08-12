@@ -8,7 +8,7 @@ echo =======================================================
 echo.
 
 set "WORK_DIR=%~dp0"
-set "JAR_PATH=%~dp0target\Follow-up-period-wearing-calendar-1.0.0-jar-with-dependencies.jar"
+set "JAR_PATH=%~dp0target\Follow-up-period-wearing-calendar-1.0.1-jar-with-dependencies.jar"
 set "EMBEDDED_JAVA=%~dp0jre\bin\java.exe"
 
 rem 1. 检查是否存在 Jar 文件

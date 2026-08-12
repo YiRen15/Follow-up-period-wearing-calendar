@@ -6,7 +6,7 @@
 
     <groupId>com.calendar</groupId>
     <artifactId>Follow-up-period-wearing-calendar</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>Follow-up-period-wearing-calendar</name>
     <description>随访周期佩戴日历及规则生成测试系统</description>
 

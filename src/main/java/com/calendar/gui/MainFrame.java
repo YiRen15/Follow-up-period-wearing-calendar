@@ -5,7 +5,7 @@ import java.awt.*;
 
 /**
  * 客户端主界面窗口框架
- * @version 1.0
+ * @version 1.0.1
  */
 public class MainFrame extends JFrame {
 

@@ -1,6 +1,6 @@
 # Windows 系统使用与零配置部署指南
 
-> **版本**：v2.1.0  |  **更新日期**：2026-08-03  
+> **版本**：Fupwc-1.00.01  |  **更新日期**：2026-08-12  
 > 本文档专为 Windows 用户准备，包含零安装启动、功能操作、新功能使用和常见问题解答。
 
 ---
@@ -71,7 +71,7 @@
 ├── launch4j-config.xml            ← Launch4j EXE 生成配置
 ├── jre/                           ← 内置 JRE 8 运行环境（免安装）
 ├── target/
-│   └── Follow-up-period-wearing-calendar-1.0.0-jar-with-dependencies.jar
+│   └── Follow-up-period-wearing-calendar-Fupwc-1.00.01-jar-with-dependencies.jar
 ├── output/
 │   ├── FollowUpCalendar.exe       ← Windows EXE
 │   └── FollowUpCalendar.app/      ← Mac 应用

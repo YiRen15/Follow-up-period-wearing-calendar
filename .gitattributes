@@ -1,4 +1,7 @@
-# 强制所有 Jar 文件作为纯二进制保存，禁止文本换行符转换
+# 强制所有 Jar、Exe、Dll、Zip 等二进制文件原生保存，禁止文本换行符转换
 *.jar binary
 *.exe binary
+*.dll binary
+*.so binary
+*.dylib binary
 *.zip binary

@@ -2,7 +2,7 @@
 target/
 
 # Built JRE binaries
-jre/
+# jre/
 
 # Compressed zip artifacts
 *.zip

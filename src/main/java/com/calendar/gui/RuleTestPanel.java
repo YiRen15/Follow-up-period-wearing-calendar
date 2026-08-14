@@ -291,9 +291,7 @@ public class RuleTestPanel extends JPanel {
         if (importedRule.isUseCustomDetectionPeriod()) {
             lblDetectionPeriod.setText("根据自定义设置检测周期为 " + importedRule.getDetectionPeriodDisplay());
         } else {
-            int pNum = importedRule.getDetectionPeriodNum();
-            int pUnit = importedRule.getDetectionPeriodUnit();
-            int totalEstDays = (pUnit == 0 ? pNum : pNum * (pUnit == 3 ? 365 : (pUnit == 2 ? 30 : 7)));
+            int totalEstDays = DateCalculator.calculateTotalActualDays(importedRule.getDetectionTaskList(), importedRule.getStartWearingDate());
             lblDetectionPeriod.setText("所有周期自动计算检测周期为 " + importedRule.getDetectionPeriodDisplay() + " (实际累积总天数: " + totalEstDays + " 天)");
         }
     }

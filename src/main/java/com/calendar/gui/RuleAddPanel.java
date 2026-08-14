@@ -348,7 +348,7 @@ public class RuleAddPanel extends JPanel {
                 }
             } else {
                 lblDetectionPeriod.setForeground(new Color(33, 115, 70));
-                int totalEstDays = (periodUnit == 0 ? periodNum : periodNum * (periodUnit == 3 ? 365 : (periodUnit == 2 ? 30 : 7)));
+                int totalEstDays = DateCalculator.calculateTotalActualDays(currentTasks, null);
                 lblDetectionPeriod.setText("所有周期自动计算检测周期为 " + periodNum + " " + unitName + " (实际累积总天数: " + totalEstDays + " 天)");
             }
         }

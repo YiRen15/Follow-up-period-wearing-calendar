@@ -248,6 +248,39 @@ public class DateCalculator {
         }
     }
 
+    /**
+     * 计算所有任务在日历上的真实物理总天数（精准包含跨越的大月、小月及闰年 2月29日 多出的天数）
+     *
+     * @param tasks        任务列表
+     * @param startDateStr 起始日期字符串（若为空，默认从今天 LocalDate.now() 算起）
+     * @return 实际物理总天数
+     */
+    public static int calculateTotalActualDays(List<DetectionTask> tasks, String startDateStr) {
+        if (tasks == null || tasks.isEmpty()) return 0;
+        LocalDate curStart = parseLocalDate(startDateStr);
+        LocalDate firstStart = curStart;
+        for (DetectionTask task : tasks) {
+            int unit = task.getDetectionFrequencyUnit();
+            int num = Math.max(1, task.getDetectionFrequencyNum());
+            switch (unit) {
+                case 3: // 年
+                    curStart = curStart.plusYears(num);
+                    break;
+                case 2: // 月
+                    curStart = curStart.plusMonths(num);
+                    break;
+                case 1: // 周
+                    curStart = curStart.plusDays(num * 7L);
+                    break;
+                default: // 天
+                    curStart = curStart.plusDays(num);
+                    break;
+            }
+        }
+        LocalDate lastEnd = curStart.minusDays(1);
+        return (int) (ChronoUnit.DAYS.between(firstStart, lastEnd) + 1);
+    }
+
     private static String convertNumberToChinese(int num) {
         if (num < 1 || num > 99) return String.valueOf(num);
         String[] digits = {"", "一", "二", "三", "四", "五", "六", "七", "八", "九"};

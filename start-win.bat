@@ -8,14 +8,14 @@ echo =======================================================
 echo.
 
 set "WORK_DIR=%~dp0"
-set "JAR_PATH=%~dp0target\Follow-up-period-wearing-calendar-Fupwc-1.00.04-jar-with-dependencies.jar"
+set "JAR_PATH=%~dp0target\Follow-up-period-wearing-calendar-Fupwc-1.00.05-jar-with-dependencies.jar"
 set "EMBEDDED_JAVA=%~dp0jre\bin\java.exe"
 
 rem 1. 检查是否存在 Jar 文件
 if exist "%JAR_PATH%" goto CHECK_JAVA
 echo 【错误提示】未找到可执行的 Jar 文件！
 echo 期待路径：%JAR_PATH%
-echo 请确保 target 目录下包含 Follow-up-period-wearing-calendar-Fupwc-1.00.04-jar-with-dependencies.jar
+echo 请确保 target 目录下包含 Follow-up-period-wearing-calendar-Fupwc-1.00.05-jar-with-dependencies.jar
 echo.
 pause
 exit /b 1

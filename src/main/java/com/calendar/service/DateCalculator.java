@@ -151,20 +151,9 @@ public class DateCalculator {
         int tDays = (int) totalDays;
 
         if (!calendarRule.isUseCustomDetectionPeriod()) {
-            // 如果未选中自定义，默认赋值总天数
-            if (tDays > 0 && tDays % 365 == 0) {
-                calendarRule.setDetectionPeriodUnit(3); // 年
-                calendarRule.setDetectionPeriodNum(tDays / 365);
-            } else if (tDays > 0 && tDays % 30 == 0) {
-                calendarRule.setDetectionPeriodUnit(2); // 月
-                calendarRule.setDetectionPeriodNum(tDays / 30);
-            } else if (tDays > 0 && tDays % 7 == 0) {
-                calendarRule.setDetectionPeriodUnit(1); // 周
-                calendarRule.setDetectionPeriodNum(tDays / 7);
-            } else {
-                calendarRule.setDetectionPeriodUnit(0); // 天
-                calendarRule.setDetectionPeriodNum(tDays);
-            }
+            int[] periodInfo = calculateDetectionPeriodFromTasks(taskList);
+            calendarRule.setDetectionPeriodNum(periodInfo[0]);
+            calendarRule.setDetectionPeriodUnit(periodInfo[1]);
         }
 
         calendarRule.recalculateWearType();

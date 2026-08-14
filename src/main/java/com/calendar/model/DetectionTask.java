@@ -210,12 +210,12 @@ public class DetectionTask implements Serializable {
      * 根据单位名称解析单位枚举值
      */
     public static int parseUnitByName(String unitName) {
-        if (unitName == null) return 1;
+        if (unitName == null) return 0;
         String name = unitName.trim();
-        if ("天".equals(name) || "日".equals(name)) return 0;
-        if ("周".equals(name) || "星期".equals(name)) return 1;
-        if ("月".equals(name)) return 2;
-        if ("年".equals(name)) return 3;
+        if (name.contains("年")) return 3;
+        if (name.contains("月")) return 2;
+        if (name.contains("周") || name.contains("星期")) return 1;
+        if (name.contains("天") || name.contains("日")) return 0;
         return 0; // 默认天
     }
 

@@ -173,7 +173,11 @@ public class WearingCalendarService {
         // 底部检测周期行
         Row totalRow = sheet.createRow(curRowIdx);
         Cell cPeriodLabel = totalRow.createCell(2);
-        cPeriodLabel.setCellValue("检测周期");
+        if (rule.isUseCustomDetectionPeriod()) {
+            cPeriodLabel.setCellValue("检测周期(自定义)");
+        } else {
+            cPeriodLabel.setCellValue("检测周期");
+        }
         cPeriodLabel.setCellStyle(headerStyle);
 
         Cell cPeriodVal = totalRow.createCell(3);
@@ -245,16 +249,17 @@ public class WearingCalendarService {
             if (unitStr.startsWith("检测周期") || unitStr.startsWith("总天数")) {
                 if (unitStr.contains("自定义")) {
                     isCustomPeriodInExcel = true;
-                    Cell cellD = row.getCell(3);
-                    String periodValStr = getCellValueAsString(cellD); // 如 "2 个月" 或 "2 年"
-                    if (!periodValStr.isEmpty()) {
-                        String[] parts = periodValStr.trim().split("\\s+");
-                        if (parts.length >= 2) {
-                            try {
-                                customPeriodNumInExcel = Integer.parseInt(parts[0].trim());
-                                customPeriodUnitInExcel = DetectionTask.parseUnitByName(parts[1].trim());
-                            } catch (Exception ignored) {}
-                        }
+                }
+                Cell cellD = row.getCell(3);
+                String periodValStr = getCellValueAsString(cellD); // 如 "2 个月" 或 "2 年" 或 "1年"
+                if (!periodValStr.isEmpty()) {
+                    periodValStr = periodValStr.trim();
+                    java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("^(\\d+)\\s*(.*)$").matcher(periodValStr);
+                    if (matcher.find()) {
+                        try {
+                            customPeriodNumInExcel = Integer.parseInt(matcher.group(1));
+                            customPeriodUnitInExcel = DetectionTask.parseUnitByName(matcher.group(2).trim());
+                        } catch (Exception ignored) {}
                     }
                 }
                 break;

@@ -41,6 +41,14 @@ public class RuleAddPanel extends JPanel {
 
     public WearingCalendarRule getCurrentRule() {
         WearingCalendarRule rule = new WearingCalendarRule();
+        if (chkCustomPeriod.isSelected()) {
+            rule.setUseCustomDetectionPeriod(true);
+            try {
+                rule.setDetectionPeriodNum(Integer.parseInt(txtCustomPeriodNum.getText().trim()));
+            } catch (Exception ignored) {
+            }
+            rule.setDetectionPeriodUnit(DetectionTask.parseUnitByName((String) comboCustomPeriodUnit.getSelectedItem()));
+        }
         rule.setDetectionTaskList(new ArrayList<>(currentTasks));
         if (chkCustomPeriod.isSelected()) {
             rule.setUseCustomDetectionPeriod(true);
@@ -363,16 +371,7 @@ public class RuleAddPanel extends JPanel {
                 fileToSave = new File(fileToSave.getAbsolutePath() + ".xlsx");
             }
             try {
-                WearingCalendarRule rule = new WearingCalendarRule();
-                rule.setDetectionTaskList(currentTasks);
-                if (chkCustomPeriod.isSelected()) {
-                    rule.setUseCustomDetectionPeriod(true);
-                    try {
-                        rule.setDetectionPeriodNum(Integer.parseInt(txtCustomPeriodNum.getText().trim()));
-                    } catch (Exception ignored) {
-                    }
-                    rule.setDetectionPeriodUnit(DetectionTask.parseUnitByName((String) comboCustomPeriodUnit.getSelectedItem()));
-                }
+                WearingCalendarRule rule = getCurrentRule();
                 rule.setStartWearingDate(LocalDate.now().format(DateCalculator.DISPLAY_FORMATTER));
                 WearingCalendarService.exportExcel(rule, fileToSave);
                 JOptionPane.showMessageDialog(this, "Excel 规则文件生成成功！\n文件路径：" + fileToSave.getAbsolutePath(), "成功", JOptionPane.INFORMATION_MESSAGE);

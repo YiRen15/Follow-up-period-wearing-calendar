@@ -6,14 +6,14 @@ import javax.swing.*;
 
 /**
  * 程序启动主入口类
- * @version Fupwc-1.00.01
+ * @version Fupwc-1.00.02
  */
 public class Main {
 
     /**
      * 当前系统/Jar 包版本号
      */
-    public static final String VERSION = "Fupwc-1.00.01";
+    public static final String VERSION = "Fupwc-1.00.02";
 
     /**
      * 获取版本号字符串

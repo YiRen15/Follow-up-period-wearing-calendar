@@ -1,7 +1,7 @@
 #!/bin/bash
 echo "=== 正在启动随访周期佩戴日历客户端 (Mac 端) ==="
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-JAR_PATH="$DIR/target/Follow-up-period-wearing-calendar-Fupwc-1.00.01-jar-with-dependencies.jar"
+JAR_PATH="$DIR/target/Follow-up-period-wearing-calendar-Fupwc-1.00.02-jar-with-dependencies.jar"
 
 if [ ! -f "$JAR_PATH" ]; then
     echo "未找到打包好的 Jar 文件，正在尝试自动使用 Maven 进行编译打包..."

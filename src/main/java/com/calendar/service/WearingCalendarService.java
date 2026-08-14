@@ -13,14 +13,14 @@ import java.util.List;
 /**
  * 随访周期佩戴日历 Excel 导入导出与核心服务 API
  * 供 GUI 客户端及服务器后端系统直接调用
- * @version Fupwc-1.00.01
+ * @version Fupwc-1.00.02
  */
 public class WearingCalendarService {
 
     /**
      * 当前系统/Jar 包版本号
      */
-    public static final String VERSION = "Fupwc-1.00.01";
+    public static final String VERSION = "Fupwc-1.00.02";
 
     /**
      * 获取当前 Jar 包的版本内容

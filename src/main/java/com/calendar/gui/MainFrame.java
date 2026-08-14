@@ -30,9 +30,9 @@ public class MainFrame extends JFrame {
             }
         } catch (Exception ignored) {}
 
-        setTitle("随访周期佩戴日历及规则生成测试系统");
+        setTitle("随访周期佩戴日历及规则生成测试系统 (" + com.calendar.Main.VERSION + ")");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1080, 720);
+        setSize(1080, 750);
         setLocationRelativeTo(null);
 
         JTabbedPane tabbedPane = new JTabbedPane();
@@ -50,5 +50,15 @@ public class MainFrame extends JFrame {
         tabbedPane.addTab("规则测试", ruleTestPanel);
 
         add(tabbedPane, BorderLayout.CENTER);
+
+        // 底部状态栏展示系统版本号
+        JPanel statusPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 4));
+        statusPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(215, 215, 215)));
+        JLabel lblVersion = new JLabel("系统版本: " + com.calendar.Main.VERSION);
+        lblVersion.setFont(new Font(getPreferredFontName(), Font.PLAIN, 12));
+        lblVersion.setForeground(new Color(100, 100, 100));
+        statusPanel.add(lblVersion);
+
+        add(statusPanel, BorderLayout.SOUTH);
     }
 }
